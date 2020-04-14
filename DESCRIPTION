@@ -6,7 +6,7 @@ Title: Time-course differential gene expression data analysis using
 Version: 1.15.1
 Date: 2020-04-14
 Author: Agata Michna
-Maintainer: Herbert Braselmann <hbraselmann@online.de>, Martin Selmansberger martin.selmansberger@helmholtz-muenchen.de
+Maintainer: Herbert Braselmann <hbraselmann@online.de>, Martin Selmansberger <martin.selmansberger@helmholtz-muenchen.de>
 Depends: R (>= 3.3), Biobase, igraph, limma, GSEABase, gtools, splines,
         GeneNet (>= 1.2.13), longitudinal (>= 1.1.12), FIs
 Description: This package provides functions for differential gene

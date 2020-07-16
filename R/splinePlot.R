@@ -30,19 +30,30 @@ splinePlot <- function(eSetObject, df, reference, toPlot="all") {
 
 	regressionMatrixEval_C <- predict(regressionMatrix_C, newTime) 
 	regressionMatrixEval_T <- predict(regressionMatrix_T, newTime)
-
+	timePoints_C = pData(eSetObject)$Time[pData(eSetObject)$Treatment == factorTreatment[1]]
+	timePoints_T = pData(eSetObject)$Time[pData(eSetObject)$Treatment == factorTreatment[2]]
+	
 	number = length(toPlot)
 	legendComp = c(factorTreatment[1],factorTreatment[2])
 	ylim = c(min(exprs.data[toPlot,])-0.25, max(exprs.data[toPlot,])+0.25)
 	
-	pdf(paste("plots_df",df,"_spline.pdf",sep=""), width=6.5, height=6.5)
+	#HB 2020/07/13 log output added
+	cat("\nLog of function splinePlot\n")
+	cat("--------------------------\n")
+	cat("Header of design matrix used for model fit:\n")
+	print(colnames(design))
+	cat("\nModel coefficient names:\n")
+	print(colnames(fit$coefficient))
+	
+	plotFileName <- paste("plots_df",df,"_spline.pdf",sep="")
+	cat("\npdf-filename for plot:", plotFileName, "\n\n")
+	
+	pdf(plotFileName, width=6.5, height=6.5)
 	for(i in 1:number)
 	{
 		ix <- which(toPlot[i] == row.names(exprs.data))
 		data_C <- exprs.data[ix,pData(eSetObject)$Treatment == factorTreatment[1]]
 		data_T <- exprs.data[ix,pData(eSetObject)$Treatment == factorTreatment[2]]
-		timePoints_C = pData(eSetObject)$Time[pData(eSetObject)$Treatment == factorTreatment[1]]
-		timePoints_T = pData(eSetObject)$Time[pData(eSetObject)$Treatment == factorTreatment[2]]
 
 		plot(timePoints_C, data_C, ylim=ylim, col=4, pch=20, main=paste(toPlot[i], sep="\n"), xlab="time", ylab="expression")
 		points(timePoints_T, data_T, col=2, pch=20)
@@ -52,9 +63,11 @@ splinePlot <- function(eSetObject, df, reference, toPlot="all") {
 		newY_C <- coeffs[1]
 		newY_T <- coeffs[1]+coeffs[2]
 
-		for(i in c(3:(df*2+2-df))){
-			newY_C <- newY_C + coeffs[i]*regressionMatrixEval_C[,(i-df+1)]
-			newY_T <- newY_T + (coeffs[i]+coeffs[i+df])*regressionMatrixEval_T[,(i-df+1)]
+		#HB 2020/07/13 loop corrected
+		for(j in c(3:(df+2)))
+		{
+			newY_C <- newY_C + coeffs[j]*regressionMatrixEval_C[,(j-2)]
+			newY_T <- newY_T + (coeffs[j]+coeffs[j+df])*regressionMatrixEval_T[,(j-2)]
 		}
 		lines(newTime, newY_C, col=4)
 		lines(newTime, newY_T, col=2)

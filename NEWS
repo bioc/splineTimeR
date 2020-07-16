@@ -1,4 +1,6 @@
 Changes in version 1.17.1 (2020-07-18)
 
 + Fixed bug. Limit for counter of inner loop in function splinePlot corrected
-+ Signigicant changes: Log output to console in function splinePlot
++ Signigicant changes
+  o Log output to console in function splinePlot
+  o package NEWS file added
